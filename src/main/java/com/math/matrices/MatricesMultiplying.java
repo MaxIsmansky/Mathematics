@@ -6,15 +6,15 @@ package com.math.matrices;
 public class MatricesMultiplying {
 
     static int[][] matrix1 = new int[][]{
-            new int[]{1, 2, 3},
-            new int[]{1, 2, 3},
-            new int[]{1, 2, 9}
+            new int[]{11, 23, 3},
+            new int[]{1, 42, 3},
+            new int[]{11, 2, 9}
     };
 
     static int[][] matrix2 = new int[][]{
+            new int[]{35, 2},
             new int[]{3, 2},
-            new int[]{3, 2},
-            new int[]{3, 2}
+            new int[]{39, 23}
     };
 
     public static void main(String[] args) throws Exception {
@@ -22,6 +22,12 @@ public class MatricesMultiplying {
         displayMatrix(result);
     }
 
+    /**
+     * @param matrix1 - Матрица 1
+     * @param matrix2 - Матрица 2
+     * @return - Матрица-результат произведения двух переданных в метод матриц
+     * @throws Exception
+     */
     public static int[][] multiply(int[][] matrix1, int[][] matrix2) throws Exception {
         checkMatrix(matrix1);
         checkMatrix(matrix2);
@@ -58,6 +64,7 @@ public class MatricesMultiplying {
     public static void checkMatrix(int[][] matrix) throws Exception {
         for (int i = 0; i < matrix.length - 1; i++) {
             if (matrix[i].length != matrix[i+1].length) {
+                displayMatrix(matrix);
                 throw new Exception("Представленный двумерный массив " + matrix + " не является матрицей");
             }
         }

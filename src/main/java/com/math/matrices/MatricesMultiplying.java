@@ -81,7 +81,8 @@ public class MatricesMultiplying {
         int j = matrix1[0].length;
         int i = matrix2.length;
         if (i != j) {
-            throw new Exception("Матрицы не могут быть умножены! Количество столбцов первой матрицы: " + j + ", количество строк второй: " + i + " - не совпадают");
+            throw new Exception("Матрицы не могут быть умножены!" +
+                    " Количество столбцов первой матрицы: " + j + ", количество строк второй: " + i + " - не совпадают");
         }
         System.out.println("Матрицы могут быть умножены");
         return new int[matrix1.length][matrix2[0].length];

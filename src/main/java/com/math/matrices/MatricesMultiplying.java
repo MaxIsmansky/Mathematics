@@ -18,7 +18,8 @@ public class MatricesMultiplying {
     };
 
     public static void main(String[] args) throws Exception {
-        multiply(matrix1, matrix2);
+        final int[][] result = multiply(matrix1, matrix2);
+        displayMatrix(result);
     }
 
     public static int[][] multiply(int[][] matrix1, int[][] matrix2) throws Exception {
@@ -77,5 +78,18 @@ public class MatricesMultiplying {
         }
         System.out.println("Матрицы могут быть умножены");
         return new int[matrix1.length][matrix2[0].length];
+    }
+
+    /**
+     * Выполняет отображение матрицы в консоли
+     * @param matrix - Матрица для отображения
+     */
+    public static void displayMatrix(int[][] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println("");
+        }
     }
 }

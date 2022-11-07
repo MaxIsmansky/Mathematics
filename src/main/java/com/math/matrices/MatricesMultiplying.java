@@ -1,5 +1,8 @@
 package com.math.matrices;
 
+/**
+ * Умножение матриц
+ */
 public class MatricesMultiplying {
 
     public static void main(String[] args) throws Exception {

@@ -5,17 +5,19 @@ package com.math.matrices;
  */
 public class MatricesMultiplying {
 
+    static int[][] matrix1 = new int[][]{
+            new int[]{1, 2, 3},
+            new int[]{1, 2, 3},
+            new int[]{1, 2, 9}
+    };
+
+    static int[][] matrix2 = new int[][]{
+            new int[]{3, 2},
+            new int[]{3, 2},
+            new int[]{3, 2}
+    };
+
     public static void main(String[] args) throws Exception {
-        int[][] matrix1 = new int[][]{
-                new int[]{1, 2, 3},
-                new int[]{1, 2, 3},
-                new int[]{1, 2, 9}
-        };
-        int[][] matrix2 = new int[][]{
-                new int[]{3, 2},
-                new int[]{3, 2},
-                new int[]{3, 2}
-        };
         multiply(matrix1, matrix2);
     }
 
@@ -33,9 +35,9 @@ public class MatricesMultiplying {
     }
 
     /**
-     * @param iStrk - строка первой матрицы для умножения
-     * @param matrix2 - вторая матрица
-     * @param j - номер столбца второй матрицы
+     * @param iStrk - Строка первой матрицы для умножения
+     * @param matrix2 - Вторая матрица
+     * @param j - Номер столбца второй матрицы
      * @return
      */
     private static int ijMultiply(int[] iStrk, int[][] matrix2, int j) {
@@ -47,6 +49,11 @@ public class MatricesMultiplying {
         return res;
     }
 
+    /**
+     * Проверка является ли введенный двумерный массив матрицей
+     * @param matrix - Матрица для проверки
+     * @throws Exception
+     */
     public static void checkMatrix(int[][] matrix) throws Exception {
         for (int i = 0; i < matrix.length - 1; i++) {
             if (matrix[i].length != matrix[i+1].length) {
@@ -56,6 +63,12 @@ public class MatricesMultiplying {
         System.out.println("Проверка размерности матриц пройдена для матрицы: " + matrix);
     }
 
+    /**
+     * @param matrix1 - Матрица 1, размер MxN
+     * @param matrix2 - Матрица 2, размер NxK
+     * @return - Результирующая матрица размера MxK
+     * @throws Exception
+     */
     public static int[][] getResultMatrixTemplate(int[][] matrix1, int[][] matrix2) throws Exception {
         int j = matrix1[0].length;
         int i = matrix2.length;

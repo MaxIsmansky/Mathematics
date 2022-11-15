@@ -20,7 +20,7 @@ public class CountingSort {
         }
 
         for (int i = 0; i < allNumbersArray.length - 1; i++) {
-            allNumbersArray[i+1] = allNumbersArray[i] + allNumbersArray[i+1];
+            allNumbersArray[i+1] += allNumbersArray[i];
         }
 
         int[] resultArray = new int[array.length];

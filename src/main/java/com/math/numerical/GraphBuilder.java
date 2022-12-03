@@ -150,7 +150,7 @@ public class GraphBuilder {
     public interface FunctionHolder {
         /**
          * @param argument - Функция для построения
-         * @return
+         * @return - Значение функции
          */
         double function(double argument);
     }

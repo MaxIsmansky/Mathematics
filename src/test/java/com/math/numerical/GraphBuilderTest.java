@@ -2,13 +2,17 @@ package com.math.numerical;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.text.ParseException;
 
 class GraphBuilderTest {
 
     @Test
-    void createPlot() {
-        int size = 20;
-        new GraphBuilder().createPlot(30, 60, x -> (int) (3*x));
+    void build1() throws ParseException {
+        new GraphBuilder(10, -10, 10,-10,0.1,0.1).build(Math::sin);
+    }
+
+    @Test
+    void build2() throws ParseException {
+        new GraphBuilder(10, -10, 10,-10,1,1).build(x -> x*x);
     }
 }

@@ -1,11 +1,9 @@
-package com.math.numerical;
+package com.math.numerical.graphbuilder;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Консольный построитель графиков
@@ -18,8 +16,8 @@ public class GraphBuilder {
     private double y_min;
     private double step_x;
     private double step_y;
-    private DecimalFormat decimalFormatX = new DecimalFormat(getPatternForNumbers(step_x));
-    private DecimalFormat decimalFormatY = new DecimalFormat(getPatternForNumbers(step_y));
+    private DecimalFormat decimalFormatX;
+    private DecimalFormat decimalFormatY;
     private int additionalSpace = 5;
 
     /**
@@ -37,21 +35,40 @@ public class GraphBuilder {
         this.y_min = y_min;
         this.step_x = step_x;
         this.step_y = step_y;
+        initFormats();
+    }
+
+    private void initFormats() {
+        decimalFormatX = new DecimalFormat(getPatternForNumbers(step_x));
+        decimalFormatY = new DecimalFormat(getPatternForNumbers(step_y));
     }
 
     /**
-     * @param functionHolder - Функция для построения
+     * @param functions - Функции для построения
      * @throws ParseException
      */
-    public void build(FunctionHolder functionHolder) throws ParseException {
+    public void build(FunctionHolder... functions) throws ParseException {
 
-        //Получим точки для построения графика
-        final Map<Double, Double> functionPoints = getFunctionPoints(functionHolder);
+        FunctionHolder functionHolder = functions[0];
 
+        ArrayList<Plot> functionPlotList = new ArrayList<>();
+        for (int i = 0; i < functions.length; i++) {
+            Plot plot = new Plot();
+            plot.setFunctionPoints(getFunctionPoints(functions[i]));
+            plot.setName("Plot " + i);
+            plot.setMarker((char) (i + 1 + '0'));
+            functionPlotList.add(plot);
+        }
+
+        createPlot(functionPlotList);
+    }
+
+    /**
+     * @param functionPlotList - Список объектов графиков функций
+     * @throws ParseException
+     */
+    private void createPlot(List<Plot> functionPlotList) throws ParseException {
         final int xSpaceLength = getPatternForNumbers(step_x).length() + additionalSpace;
-
-        double lastDoubleY = y_max;
-        double lastDoubleX = y_min;
         for (double j = y_max; j > y_min; j = j - step_y) {
             final String valueY = decimalFormatY.format(j);
             j = NumberFormat.getInstance(Locale.FRANCE).parse(valueY).doubleValue();
@@ -81,27 +98,60 @@ public class GraphBuilder {
                     }
                 //График строится в этом блоке
                 } else {
-                    if (functionPoints.get(i) == j) {
-                        System.out.print("*");
-                    } else {
-                        System.out.print(".");
+                    boolean isPointCreated = false;
+                    for (int f = 0; f < functionPlotList.size(); f++) {
+                        if (!isPointCreated) {
+                            if (functionPlotList.get(f).getFunctionPoints().get(i) == j) {
+                                System.out.print(functionPlotList.get(f).getMarker());
+                                isPointCreated = true;
+                            } else if (f + 1 == functionPlotList.size()) {
+                                System.out.print(".");
+                            }
+                        }
                     }
                     //Отделяем точки пробелами, чтобы цифры вместились и каждая цифра соответствовала своей точке
                     for (int k = 0; k < xSpaceLength; k++) {
                         System.out.print(" ");
                     }
                 }
-                lastDoubleX = i;
             }
-            lastDoubleY = j;
-            lastDoubleX = 0;
             System.out.println();
         }
     }
 
     /**
+     * @param function - Функция, график которой будет построен. На той же координатной плоскости будет построен график производной функции
+     */
+    public void buildFunctionAndDerivative(FunctionHolder function) {
+        try {
+            final Map<Double, Double> functionPoints = getFunctionPoints(function);
+            Plot functionPlot = new Plot();
+            functionPlot.setFunctionPoints(functionPoints);
+            functionPlot.setMarker('f');
+            Map<Double, Double> derivativeFunctionPoints = new HashMap<>();
+            functionPoints.forEach((key, value) -> {
+                double d_x = key + 0.01;
+                double d_y = function.function(d_x);
+                double derivativePoint = d_y/d_x;
+                try {
+                    derivativeFunctionPoints.put(formatDoubleByDecimalNumbers(key), formatDoubleByDecimalNumbers(derivativePoint));
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            Plot derivativePlot = new Plot();
+            derivativePlot.setFunctionPoints(derivativeFunctionPoints);
+            derivativePlot.setMarker('d');
+            List<Plot> functionAndDerivativeList = List.of(functionPlot, derivativePlot);
+            createPlot(functionAndDerivativeList);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * @param num - Число с плавающей точкой
-     * @return - Число с плавающей точкой, округленное в зависимости от количество цифр после запятой у шага
+     * @return - Число с плавающей точкой, округленное в зависимости от количества цифр после запятой у шага
      */
     private String getPatternForNumbers(double num) {
         StringBuilder pattern = new StringBuilder("0");
@@ -123,19 +173,27 @@ public class GraphBuilder {
      */
     private Map<Double, Double> getFunctionPoints(FunctionHolder functionHolder) throws ParseException {
         Map<Double, Double> functionPointsMap = new HashMap<>();
+        Map<Double, Double> roundedFunctionPointsMap = new HashMap<>();
         double xPoint = x_min, yPoint = 0;
-        while (xPoint != x_max) {
-            xPoint = formatDoubleByDecimalNumbers(xPoint);
+        while (xPoint < x_max) {
             yPoint = functionHolder.function(xPoint);
-            yPoint = formatDoubleByDecimalNumbers(yPoint);
             functionPointsMap.put(xPoint, yPoint);
             xPoint += step_x;
         }
-        return functionPointsMap;
+        functionPointsMap.forEach((key, value) -> {
+            try {
+                roundedFunctionPointsMap.put(formatDoubleByDecimalNumbers(key), formatDoubleByDecimalNumbers(value));
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return roundedFunctionPointsMap;
     }
 
     /**
      * @param value - Число с плавающей точкой
+     *
+     *
      * @return - Число с плавающей точкой округленное в соответствии с паттерном
      * @throws ParseException
      */

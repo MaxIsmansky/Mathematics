@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Консольный построитель графиков
  */
-public class GraphBuilder {
+public class PlotBuilder {
 
     private double x_max;
     private double x_min;
@@ -28,7 +28,7 @@ public class GraphBuilder {
      * @param step_x - Шаг вдоль оси X
      * @param step_y - Шаг вдоль оси Y
      */
-    public GraphBuilder(double x_max, double x_min, double y_max, double y_min, double step_x, double step_y) {
+    public PlotBuilder(double x_max, double x_min, double y_max, double y_min, double step_x, double step_y) {
         this.x_max = x_max;
         this.x_min = x_min;
         this.y_max = y_max;

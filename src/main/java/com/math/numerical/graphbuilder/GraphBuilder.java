@@ -130,9 +130,12 @@ public class GraphBuilder {
             functionPlot.setMarker('f');
             Map<Double, Double> derivativeFunctionPoints = new HashMap<>();
             functionPoints.forEach((key, value) -> {
+                //argument change
                 double d_x = key + 0.01;
-                double d_y = function.function(d_x);
-                double derivativePoint = d_y/d_x;
+                //function change
+                double d_y = function.function(d_x) - function.function(key);
+                //function change
+                double derivativePoint = d_y/0.01;
                 try {
                     derivativeFunctionPoints.put(formatDoubleByDecimalNumbers(key), formatDoubleByDecimalNumbers(derivativePoint));
                 } catch (ParseException e) {

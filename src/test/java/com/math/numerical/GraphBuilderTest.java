@@ -24,6 +24,6 @@ class GraphBuilderTest {
 
     @Test
     void buildFunctionAndDerivative() throws ParseException {
-        new GraphBuilder(10, -10, 10,-10,0.1,0.1).buildFunctionAndDerivative(x -> Math.pow(x, 2));
+        new GraphBuilder(10, -10, 10,-10,0.1,0.1).buildFunctionAndDerivative(x -> Math.pow(x, 3));
     }
 }

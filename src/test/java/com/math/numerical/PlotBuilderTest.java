@@ -19,11 +19,16 @@ class PlotBuilderTest {
 
     @Test
     void build3() throws ParseException {
-        new PlotBuilder(10, -10, 10,-10,0.1,0.1).build(Math::sin, x -> x);
+        new PlotBuilder(10, -10, 10,-10,0.5,0.1).build(x -> Math.sin(x));
+    }
+
+    @Test
+    void build4() throws ParseException {
+        new PlotBuilder(10, -10, 10,-10,0.1,0.1).build(x -> 1/(1 + Math.pow(Math.E, -x)));
     }
 
     @Test
     void buildFunctionAndDerivative() throws ParseException {
-        new PlotBuilder(10, -10, 10,-10,0.1,0.1).buildFunctionAndDerivative(x -> Math.pow(x, 2));
+        new PlotBuilder(10, -10, 10,-10,0.1,0.1).buildFunctionAndDerivative(x -> Math.pow(x, 3));
     }
 }

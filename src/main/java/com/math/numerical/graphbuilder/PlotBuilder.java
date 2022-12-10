@@ -49,8 +49,6 @@ public class PlotBuilder {
      */
     public void build(FunctionHolder... functions) throws ParseException {
 
-        FunctionHolder functionHolder = functions[0];
-
         ArrayList<Plot> functionPlotList = new ArrayList<>();
         for (int i = 0; i < functions.length; i++) {
             Plot plot = new Plot();
@@ -70,11 +68,11 @@ public class PlotBuilder {
     private void createPlot(List<Plot> functionPlotList) throws ParseException {
         final int xSpaceLength = getPatternForNumbers(step_x).length() + additionalSpace;
         for (double j = y_max; j > y_min; j = j - step_y) {
-            final String valueY = decimalFormatY.format(j);
-            j = NumberFormat.getInstance(Locale.FRANCE).parse(valueY).doubleValue();
+            String valueY = decimalFormatY.format(j);
+            j = formatDoubleByDecimalNumbers(valueY);
             for (double i = x_min; i < x_max; i += step_x) {
-                final String valueX = decimalFormatX.format(i);
-                i = NumberFormat.getInstance(Locale.FRANCE).parse(valueX).doubleValue();
+                String valueX = decimalFormatX.format(i);
+                i = formatDoubleByDecimalNumbers(valueX);
                 //Выравнивание оси X вдоль оси Y. Построение оси Y
                 if (j == 0) {
                     if (i == 0) {
@@ -139,7 +137,7 @@ public class PlotBuilder {
                 try {
                     derivativeFunctionPoints.put(formatDoubleByDecimalNumbers(key), formatDoubleByDecimalNumbers(derivativePoint));
                 } catch (ParseException e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException("Возникли непредвиденные сложности с получением производной");
                 }
             });
             Plot derivativePlot = new Plot();
@@ -148,7 +146,7 @@ public class PlotBuilder {
             List<Plot> functionAndDerivativeList = List.of(functionPlot, derivativePlot);
             createPlot(functionAndDerivativeList);
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Возникли непредвиденные сложности с получением производной");
         }
     }
 
@@ -187,7 +185,7 @@ public class PlotBuilder {
             try {
                 roundedFunctionPointsMap.put(formatDoubleByDecimalNumbers(key), formatDoubleByDecimalNumbers(value));
             } catch (ParseException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Возникли непредвиденные сложности с построением");
             }
         });
         return roundedFunctionPointsMap;
@@ -195,13 +193,20 @@ public class PlotBuilder {
 
     /**
      * @param value - Число с плавающей точкой
-     *
-     *
      * @return - Число с плавающей точкой округленное в соответствии с паттерном
      * @throws ParseException
      */
     private double formatDoubleByDecimalNumbers (double value) throws ParseException {
         return NumberFormat.getInstance(Locale.FRANCE).parse(decimalFormatX.format(value)).doubleValue();
+    }
+
+    /**
+     * @param value - Число с плавающей точкой
+     * @return - Число с плавающей точкой округленное в соответствии с паттерном
+     * @throws ParseException
+     */
+    private double formatDoubleByDecimalNumbers (String value) throws ParseException {
+        return NumberFormat.getInstance(Locale.FRANCE).parse(value).doubleValue();
     }
 
     /**
